@@ -2,7 +2,9 @@ import sqlite3
 
 DATABASE_FILE = "./origami.db"
 
+
 #open the connection
+
 
 '''Functions'''
 def show_origami(connection):
@@ -17,6 +19,21 @@ def show_origami(connection):
              print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
     except:
         print("Something went wrong with connection.")
+
+
+def show_item(connection):
+    '''prints a specific origami model's information'''
+    try:
+        cursor = connection.cursor()
+        sql = "SELECT * FROM origami_models"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
+        for item in results:
+            if item[1] == find_name:
+                print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
+    except:
+         print("Something went wrong with finding the item")
 
 
 def add_item(connection, item_name, item_description, item_difficulty_level):
@@ -68,11 +85,20 @@ def update_item(connection, item_name, new_item_description):
 with sqlite3.connect(DATABASE_FILE) as connection:
      #user interaction
      while True:
-         user_input = input(f"\nWhat would you like to do?\n1.Print an item\n2.Add an item\n3.Delete an item\n4.Update an item's description\n")
+         user_input = input(f"\nWhat would you like to do?\n1.Print item(s)\n2.Add an item\n3.Delete an item\n4.Update an item's description\nPress any key to exit\n")
          match user_input:
              case '1':
-                 #print origami model
-                 show_origami(connection)
+                 #print origami model(s)
+                 print_origami = input("\nIs there a specific item you would like to see?\nYes or No?\n")
+                 match print_origami:
+                     case 'Yes':
+                         #view an item by name
+                         find_name = input(f"\nWhat is the name of the item you would like to see?\n")
+                         #print the item
+                         show_item(connection)
+                     case 'No':
+                         #print all the origami models
+                         show_origami(connection)
              case '2':
                  #add a new origami model to the database
                  item_name = input("\nItem name: ")
