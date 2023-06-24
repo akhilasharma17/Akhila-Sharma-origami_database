@@ -7,7 +7,7 @@ DATABASE_FILE = "./origami.db"
 
 
 '''Functions'''
-def show_origami(connection):
+def show_all(connection):
     '''prints all the origami models' information'''
     try:
          cursor = connection.cursor()
@@ -30,8 +30,14 @@ def show_item(connection):
         results = cursor.fetchall()
         print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
         for item in results:
-            if item[1] == find_name:
-                print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
+            if find_type == '1':
+                #find the item by name
+                if item[1] == find_name:
+                    print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
+            elif find_type == '2':
+                #find the item by difficulty level
+                if item[3] == find_difficulty:
+                   print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}") 
     except:
          print("Something went wrong with finding the item")
 
@@ -89,16 +95,23 @@ with sqlite3.connect(DATABASE_FILE) as connection:
          match user_input:
              case '1':
                  #print origami model(s)
-                 print_origami = input("\nIs there a specific item you would like to see?\nYes or No?\n")
+                 print_origami = input("\nIs there a specific item you would like to search for?\nYes or No?\n")
                  match print_origami:
                      case 'Yes':
-                         #view an item by name
-                         find_name = input(f"\nWhat is the name of the item you would like to see?\n")
-                         #print the item
-                         show_item(connection)
+                         #search for an item(s)
+                         find_type = input(f"\nWhat would you like to search for the item by?\n1.Name\n2.Difficulty level\n")
+                         if find_type == '1':
+                            #view an item by name
+                            find_name = input(f"\nWhat is the name of the item you would like to see?\n")
+                                #print the item
+                            show_item(connection)
+                         elif find_type == '2':
+                            #view an item(s) by difficulty level
+                            find_difficulty = input(f"\nWhat is the difficulty level of the items you would like to see?\n")
+                            show_item(connection)
                      case 'No':
                          #print all the origami models
-                         show_origami(connection)
+                         show_all(connection)
              case '2':
                  #add a new origami model to the database
                  item_name = input("\nItem name: ")
