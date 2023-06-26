@@ -2,9 +2,7 @@ import sqlite3
 
 DATABASE_FILE = "./origami.db"
 
-
 #open the connection
-
 
 '''Functions'''
 def show_all(connection):
@@ -96,7 +94,7 @@ with sqlite3.connect(DATABASE_FILE) as connection:
              case '1':
                  #print origami model(s)
                  print_origami = input("\nIs there a specific item you would like to search for?\nYes or No?\n")
-                 match print_origami:
+                 match print_origami.capitalize():
                      case 'Yes':
                          #search for an item(s)
                          find_type = input(f"\nWhat would you like to search for the item by?\n1.Name\n2.Difficulty level\n")
@@ -118,7 +116,7 @@ with sqlite3.connect(DATABASE_FILE) as connection:
                  item_description = input("\nItem description: ")
                  item_difficulty_level = input("\nItem difficulty: ")
                  add_item(connection, item_name, item_description, item_difficulty_level)
-             case'3':
+             case '3':
                  #delete an item by name
                  item_name = input("\nItem name: ")
                  delete_item(connection, item_name)
@@ -128,15 +126,13 @@ with sqlite3.connect(DATABASE_FILE) as connection:
                  new_item_description = input("\nUpdated description: ")
                  update_item(connection, item_name, new_item_description)
              case _:
+                 #when the user wants to exit, they can enter a random key, and the loop will break
                  print("\nGoodbye.")
                  break
 
 
-
-
 #connection will close automatically
 
-#use match and cases to put two different tables in one code file
 
 
 '''
