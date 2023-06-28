@@ -1,95 +1,17 @@
 import sqlite3
+#get information from database through utilities
+from utilities import(connection, item_name, item_description, item_difficulty_level, new_item_description)
+#get functions from utilities
+from utilities import(show_all, show_item, add_item, delete_item, update_item)
 
 DATABASE_FILE = "./origami.db"
 
 #open the connection
 
-'''Functions'''
-def show_all(connection):
-    '''prints all the origami models' information'''
-    try:
-         cursor = connection.cursor()
-         sql = "SELECT * FROM origami_models"
-         cursor.execute(sql)
-         results = cursor.fetchall()
-         print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
-         for item in results:
-             print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
-    except:
-        print("Something went wrong with connection.")
-
-
-def show_item(connection):
-    '''prints a specific origami model's information'''
-    try:
-        cursor = connection.cursor()
-        sql = "SELECT * FROM origami_models"
-        cursor.execute(sql)
-        results = cursor.fetchall()
-        print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
-        for item in results:
-            if find_type == '1':
-                #find the item by name
-                if item[1] == find_name:
-                    print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
-            elif find_type == '2':
-                #find the item by difficulty level
-                if item[3] == find_difficulty:
-                   print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}") 
-    except:
-         print("Something went wrong with finding the item")
-
-
-def add_item(connection, item_name, item_description, item_difficulty_level):
-    '''adds an item to the origami database'''
-    try:
-        cursor = connection.cursor()
-        sql = "INSERT INTO origami_models(model_name, description, difficulty_level) VALUES (?, ?, ?)"
-        cursor.execute(sql,(item_name, item_description, item_difficulty_level))
-        connection.commit()
-    except:
-        #could not commit connection because something was incomplete
-        print("Couldn't add item.")
-
-
-def delete_item(connection, item_name):
-    '''deletes an item by name from the origami database'''
-    try:
-        cursor = connection.cursor()
-        sql = "DELETE FROM origami_models WHERE model_name = ?"
-        cursor.execute(sql,(item_name,))
-        num_rows_affected = cursor.rowcount
-        if num_rows_affected == 0:
-            #none of the rows in the table had the item
-            print("Couldn't find item.")
-        else:
-            connection.commit()
-    except:
-        #could not commit connection because something was incomplete
-        print("Couldn't delete item. Item does exist.")
-
-
-def update_item(connection, item_name, new_item_description):
-    '''updates/modifies an item by name from the origami database'''
-    try:
-        cursor = connection.cursor()
-        #update item's description
-        sql = "UPDATE origami_models SET description = ? WHERE model_name = ?"
-        cursor.execute(sql,(new_item_description, item_name))
-        num_rows_affected = cursor.rowcount
-        if num_rows_affected == 0:
-            print("Cannot update item.")
-        else:
-            connection.commit()
-    except:
-        #could not commit connection because something was incomplete or missing
-        print("Failed to update the item.")
-
-
 with sqlite3.connect(DATABASE_FILE) as connection:
      #user interaction
      while True:
-         user_input = input(f"\nWhat would you like to do?\n1.Print item(s)\n2.Add an item\n3.Delete an item\n4.Update an item's description\nPress any key to exit\n")
+         user_input = input(f"\nWhat would you like to do?\n1.Print item(s)\n2.Add an item\n3.Delete an item\n4.Update an item's description\nEnter any key to exit\n")
          match user_input:
              case '1':
                  #print origami model(s)
@@ -107,7 +29,7 @@ with sqlite3.connect(DATABASE_FILE) as connection:
                             #view an item(s) by difficulty level
                             find_difficulty = input(f"\nWhat is the difficulty level of the items you would like to see?\n")
                             show_item(connection)
-                     case 'No':
+                     case'No':
                          #print all the origami models
                          show_all(connection)
              case '2':
