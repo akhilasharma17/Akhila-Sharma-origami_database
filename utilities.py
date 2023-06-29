@@ -1,5 +1,4 @@
 
-
 DATABASE_FILE = "./origami.db"
 
 '''Functions'''
@@ -33,7 +32,7 @@ def show_item(connection, find_type, value):
         results = cursor.fetchall()
         #check if the item was in the table
         if len(results) == 0:
-            print('The item you are searching for could not be found. Please try again with correct values')
+            print('The item you are searching for could not be found')
         else:
             #print the item(s)
             print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
@@ -53,6 +52,7 @@ def add_item(connection, item_name, item_description, item_difficulty_level):
     except:
         #could not commit connection because something was incomplete
         print("Couldn't add item.")
+
 
 def delete_item(connection, item_name):
     '''deletes an item by name from the origami database'''

@@ -2,19 +2,20 @@ import sqlite3
 #get functions and DATABASE_FILE from utilities
 from utilities import(show_all, show_item, add_item, delete_item, update_item, DATABASE_FILE)
 
+
 #open the connection
 
 
 with sqlite3.connect(DATABASE_FILE) as connection:
      #user interaction
      while True:
-         user_input = input(f"\nWhat would you like to do?\n1.Print item(s)\n2.Add an item\n3.Delete an item\n4.Update an item's description\nEnter any key to exit\n")
+         user_input = input(f"\nWhat would you like to do?\n1.Print item(s)\n2.Add an item\n3.Delete an item\n4.Update an item's description\nPress Enter to exit\n")
          match user_input:
              case '1':
                  #print origami model(s)
-                 print_origami = input("\nIs there a specific item you would like to search for?\nYes or No?\n")
+                 print_origami = input("\nIs there a specific item you would like to search for?\nY/N\n")
                  match print_origami.capitalize():
-                     case 'Yes':
+                     case 'Y':
                         #  search for an item(s)
                          find_type = input(f"\nWhat would you like to search for the item by?\n1.Name\n2.Difficulty level\n")
                          if find_type == '1':
@@ -26,7 +27,7 @@ with sqlite3.connect(DATABASE_FILE) as connection:
                             #view an item(s) by difficulty level
                             find_difficulty = input(f"\nWhat is the difficulty level of the items you would like to see?\n")
                             show_item(connection, find_type, find_difficulty)
-                     case'No':
+                     case'N':
                          #print all the origami models
                          show_all(connection)
              case '2':
@@ -41,7 +42,7 @@ with sqlite3.connect(DATABASE_FILE) as connection:
                  delete_item(connection, item_name)
              case '4':
                  #update the item's description
-                 item_name = input("\nCurrent item: ")
+                 item_name = input("\nItem name: ")
                  new_item_description = input("\nUpdated description: ")
                  update_item(connection, item_name, new_item_description)
              case _:
