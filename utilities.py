@@ -1,5 +1,6 @@
-#get information from the origami file
-from origami import(find_type, find_name, find_difficulty)
+
+
+DATABASE_FILE = "./origami.db"
 
 '''Functions'''
 def show_all(connection):
@@ -16,23 +17,28 @@ def show_all(connection):
         print("Something went wrong with connection.")
 
 
-def show_item(connection):
+def show_item(connection, find_type, value):
     '''prints a specific origami model's information'''
     try:
         cursor = connection.cursor()
-        sql = "SELECT * FROM origami_models"
-        cursor.execute(sql)
-        results = cursor.fetchall()
-        print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
-        for item in results:
-            if find_type == '1':
+        sql = "SELECT * FROM origami_models WHERE "
+        match find_type:
+            case '1':
                 #find the item by name
-                if item[1] == find_name:
-                    print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
-            elif find_type == '2':
+                sql += "model_name = ?"
+            case '2':
                 #find the item by difficulty level
-                if item[3] == find_difficulty:
-                   print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}") 
+                sql += "difficulty_level = ?"
+        cursor.execute(sql, (value,))
+        results = cursor.fetchall()
+        #check if the item was in the table
+        if len(results) == 0:
+            print('The item you are searching for could not be found. Please try again with correct values')
+        else:
+            #print the item(s)
+            print(f"{'model_id':<15}{'model_name':<20}{'description':<140}{'difficulty_level'}")
+            for item in results:
+                print(f"{item[0]:<15}{item[1]:<20}{item[2]:<140}{item[3]}")
     except:
          print("Something went wrong with finding the item")
 
@@ -47,32 +53,6 @@ def add_item(connection, item_name, item_description, item_difficulty_level):
     except:
         #could not commit connection because something was incomplete
         print("Couldn't add item.")
-"""
-
-def add_item(connection, a, b, c):
-    '''adds an item to the origami database
-        a(TEXT) '''
-    try:
-        cursor = connection.cursor()
-        sql = "INSERT INTO origami_models(model_name, description, difficulty_level) VALUES (?, ?, ?)"
-        cursor.execute(sql,(item_name, item_description, item_difficulty_level))
-        connection.commit()
-    except:
-        #could not commit connection because something was incomplete
-        print("Couldn't add item.")
-"""
-"""
-def sort_items(connection):
-    '''orders all of the origami models based on what the user chooses eg.alphabetical order'''
-    try:
-        cursor = connection.cursor()
-        sql = "SORT * FROM origami_models"
-        cursor.execute(sql,())
-        connection.commit()
-    except:
-        #could not commit connection because something was incomplete
-        print("Couldn't add item.")
-"""
 
 def delete_item(connection, item_name):
     '''deletes an item by name from the origami database'''

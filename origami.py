@@ -1,12 +1,9 @@
 import sqlite3
-#get information from database through utilities
-from utilities import(connection, item_name, item_description, item_difficulty_level, new_item_description)
-#get functions from utilities
-from utilities import(show_all, show_item, add_item, delete_item, update_item)
-
-DATABASE_FILE = "./origami.db"
+#get functions and DATABASE_FILE from utilities
+from utilities import(show_all, show_item, add_item, delete_item, update_item, DATABASE_FILE)
 
 #open the connection
+
 
 with sqlite3.connect(DATABASE_FILE) as connection:
      #user interaction
@@ -18,17 +15,17 @@ with sqlite3.connect(DATABASE_FILE) as connection:
                  print_origami = input("\nIs there a specific item you would like to search for?\nYes or No?\n")
                  match print_origami.capitalize():
                      case 'Yes':
-                         #search for an item(s)
+                        #  search for an item(s)
                          find_type = input(f"\nWhat would you like to search for the item by?\n1.Name\n2.Difficulty level\n")
                          if find_type == '1':
-                            #view an item by name
+                            # view an item by name
                             find_name = input(f"\nWhat is the name of the item you would like to see?\n")
                                 #print the item
-                            show_item(connection)
+                            show_item(connection, find_type, find_name)
                          elif find_type == '2':
                             #view an item(s) by difficulty level
                             find_difficulty = input(f"\nWhat is the difficulty level of the items you would like to see?\n")
-                            show_item(connection)
+                            show_item(connection, find_type, find_difficulty)
                      case'No':
                          #print all the origami models
                          show_all(connection)
@@ -56,13 +53,12 @@ with sqlite3.connect(DATABASE_FILE) as connection:
 #connection will close automatically
 
 
-
 '''
 #add item
-    # delete_item(connection, "Crane")
-    # show_origami(connection)
+     delete_item(connection, "Crane")
+     show_origami(connection)
 
-# #update item
-#     update_item(connection, "Crane", "The origami crane symbolizes peace and is one of the most popular origami models.")
-#     show_origami(connection)
+#update item
+     update_item(connection, "Crane", "The origami crane symbolizes peace and is one of the most popular origami models.")
+     show_origami(connection)
 '''
